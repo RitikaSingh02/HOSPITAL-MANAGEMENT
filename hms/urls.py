@@ -24,5 +24,7 @@ urlpatterns = [
 
     url(r'^Receptionist_interface/',include('Receptionist.urls')),
 
-  #  url(r'^Doctor_interface/',include('Doctor.urls')),
+    url(r'^Doctor_interface/',include('Doctor.urls')),
+
+    url(r'^Appointment_interface/',include('appointment.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -25,7 +25,7 @@ SECRET_KEY = '7_^fd)m%h2%!n0fqo=s-a!s=0+whifc(e(=%p*sl7y1_p+x^#&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['baa0c930edc2.ngrok.io','127.0.0.1']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Patient',
     'Receptionist',
     'Doctor',
+    'appointment',
 ]
 
 MIDDLEWARE = [
