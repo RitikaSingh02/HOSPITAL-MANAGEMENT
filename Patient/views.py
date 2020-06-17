@@ -6,6 +6,7 @@ import json
 
 def patients_list(request):
     if request.method=="GET":
+        
         all_patients=list(patients.objects.filter(status="active").values())
         return JsonResponse(all_patients,safe=False)
 
@@ -43,11 +44,6 @@ def patients_registration(request):
          Ulcer=data['Ulcer']
          other=data['other']
 
-         users=users.objects.create(
-             user_first_name=PATIENT_FIRST_NAME,
-             user_last_name=PATIENT_LAST_NAME,
-             password=PASSWORD
-         )
          new_patients=patients.objects.create(
          PATIENT_FIRST_NAME=PATIENT_FIRST_NAME,
          PATIENT_LAST_NAME=PATIENT_LAST_NAME,
@@ -91,36 +87,19 @@ def patients_registration(request):
 def patient_login(request):
     if request.method=="POST":
          data=json.loads(request.body)
+        
          PATIENT_FIRST_NAME=data['PATIENT_FIRST_NAME']
          PATIENT_LAST_NAME=data['PATIENT_LAST_NAME']
          PASSWORD=data['PASSWORD']
          patient=patients.objects.filter(PATIENT_FIRST_NAME=PATIENT_FIRST_NAME,PATIENT_LAST_NAME=PATIENT_LAST_NAME,
          PASSWORD=PASSWORD).values()
-         if(patient!="NULL"):
+         
+         if(patient):
              return JsonResponse(list(patient),safe=False)
          else:
              return JsonResponse("not registered yet",safe=False)
 
-def patient_appointment(request):
-    if request.method=="POST":
-        data=json.loads(request.body)
-        id_patient=data['id']
-        appointment_date=data['appointment_date']
-        appointment_time=data['appointment_time']
-        doctor_name=data['doctor_name']
-        patient=patient_appointment_details.objects.filter(patient_appointment_id_id=id_patient).values()
 
-        if(patient!="NULL"):
-            patient=patient_appointment_details.objects.filter(patient_appointment_id_id=id_patient).values()
-        else:
-            patient=patient_appointment_details.objects.create(
-            appointment_date=appointment_date,
-            appointment_time=appointment_time,
-            doctor_name=doctor_name,
-            patient_appointment_id_id=id_patient
-            )
-            patients.objects.filter(id=id_patient).update(APPOINTMENT_STATUS="PENDING")
-        return JsonResponse("yes",safe=False)
 
 
 

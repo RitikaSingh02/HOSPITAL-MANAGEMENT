@@ -18,10 +18,11 @@ class patients(models.Model):
     STATE=models.CharField(max_length=250,default="NULL")
     POSTAL_CODE=models.CharField(max_length=250,default="NULL")
     MARITAL_STATUS=models.CharField(max_length=250,default="NULL")
-    MOBILE_NO=models.CharField(max_length=20,default="NULL",unique=True)
+    MOBILE_NO=models.CharField(max_length=20,default="NULL")
     AADHAR_NO=models.CharField(max_length=34,default="NOT AVAILABLE",unique=True)
     PAYMENT_STATUS=models.CharField(max_length=50,default="NO")
-    APPOINTMENT_STATUS=models.CharField(max_length=50,default="NO")
+    APPOINTMENT_STATUS_RECEPTIONIST=models.CharField(max_length=50,default="NO")
+    APPOINTMENT_STATUS_DOCTOR=models.CharField(max_length=50,default="NOT PROCEEDED")
     PATIENT_IMG=models.ImageField(upload_to='patient_img',blank=True)
     status=models.CharField(max_length=20,default="active")
 
@@ -49,7 +50,9 @@ class patient_appointment_details(models.Model):
     patient_appointment_id=models.ForeignKey(patients,null=True,on_delete=models.SET_NULL)
     appointment_date=models.DateField(auto_now_add=True,auto_now=False)
     appointment_time=models.TimeField(auto_now=True,auto_now_add=False)
-    doctor_name=models.CharField(max_length=230)
-
+    speciality=models.CharField(max_length=250,default="NULL")
+    preferred_location=models.CharField(max_length=250,default="NULL")
+    problem=models.CharField(max_length=250,default="NULL")
+    doctor_name=models.CharField(max_length=250,default="NULL")
 
 # Create your models here.
