@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime,date 
+from Doctor.models import doctors
 
 class patients(models.Model):
     PATIENT_FIRST_NAME=models.CharField(max_length=250,default="NULL")
@@ -25,7 +26,7 @@ class patients(models.Model):
     APPOINTMENT_STATUS_DOCTOR=models.CharField(max_length=50,default="NOT PROCEEDED")
     PATIENT_IMG=models.ImageField(upload_to='patient_img',blank=True)
     status=models.CharField(max_length=20,default="active")
-
+    
 
 class patients_account_details(models.Model):
     patient_id=models.ForeignKey(patients,null=True,on_delete=models.SET_NULL)
@@ -54,5 +55,7 @@ class patient_appointment_details(models.Model):
     preferred_location=models.CharField(max_length=250,default="NULL")
     problem=models.CharField(max_length=250,default="NULL")
     doctor_name=models.CharField(max_length=250,default="NULL")
+    doctor=models.ForeignKey(doctors,null=True,on_delete=models.SET_NULL)
+    reason_of_rejection=models.CharField(max_length=250,default="NULL")
 
 # Create your models here.
