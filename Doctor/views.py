@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from . models import doctors
-from Patient.models import patients
+from Patient.models import patients,patient_appointment_details
 import json
 
 def doctors_registration(request):
@@ -17,7 +17,8 @@ def doctor_login(request):
          DOCTOR_FIRST_NAME=data['PATIENT_FIRST_NAME']
          DOCTOR_LAST_NAME=data['PATIENT_LAST_NAME']
          PASSWORD=data['PASSWORD']
-         doctor=doctors.objects.filter(DOCTOR_FIRST_NAME=DOCTOR_FIRST_NAME,DOCTOR_LAST_NAME=DOCTOR_LAST_NAME,
+         doctor=doctors.objects.filter(DOCTOR_FIRST_NAME__contains=DOCTOR_FIRST_NAME,DOCTOR_LAST_NAME__contains=DOCTOR_LAST_NAME,
+         PASSWORD__contains=PASSWORD).filter(DOCTOR_FIRST_NAME=DOCTOR_FIRST_NAME,DOCTOR_LAST_NAME=DOCTOR_LAST_NAME,
          PASSWORD=PASSWORD).values()
          if(doctor):
              return JsonResponse(list(doctor),safe=False)
@@ -38,11 +39,12 @@ def appointment_approve(request):
     if request.method=="POST":#request id of the patient
         data=json.loads(request.body)
         patient=patients.objects.filter(id=data['id']).update(APPOINTMENT_STATUS_DOCTOR="APPROVED")
+        patient_appointment_details.objects.filter(id=data['id']).update(reason_of_rejection="NO")
         return JsonResponse("your request has been approved by the doctor",safe=False)
 
 def appointment_rejection(request):
     if request.method=="POST":#request id of the patient
         data=json.loads(request.body)
-        patient=patients.objects.filter(id=data['id']).update(APPOINTMENT_STATUS_DOCTOR="REJECTED")
-        return JsonResponse("your request has been approved by the doctor because of the reason"+str(data['reason'])
-        ,safe=False)
+        patients.objects.filter(id=data['id']).update(APPOINTMENT_STATUS_DOCTOR="REJECTED")
+        patient_appointment_details.objects.filter(id=data['id']).update(reason_of_rejection=data['reason'])
+        return JsonResponse("your request has been rejected by the doctor  ",safe=False)
