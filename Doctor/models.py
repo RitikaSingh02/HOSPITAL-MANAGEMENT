@@ -20,4 +20,5 @@ class doctors(models.Model):
     QUALIFICATION=models.CharField(max_length=34,default="NOT AVAILABLE",unique=True)
     DOCTOR_IMG=models.ImageField(upload_to='doctor_img',blank=True)
     status=models.CharField(max_length=20,default="active")
+ #   PATIENT_COUNT=models.IntegerField(default=0)
 # Create your models here.
