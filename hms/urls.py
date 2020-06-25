@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'^Doctor_interface/',include('Doctor.urls')),
 
     url(r'^Appointment_interface/',include('appointment.urls')),
+
+    url(r'^Payment_interface/',include('payment.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

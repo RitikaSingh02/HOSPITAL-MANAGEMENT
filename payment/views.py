@@ -11,21 +11,30 @@ def patient_payment(request):
         patient_id=data['id']
         account_no=data['account_no']
         bank_name=data['bank_name']
-        patient=patients_account_details.objects.filter(patient_id_id=patient_id).exists()
-        if(patient):
-            patients_account_details.objects.filter(patient_id_id=patient_id).update(
+        appointment=patient_appointment_details.objects.filter(patient_appointment_id=patient_id,APPOINTMENT_STATUS_RECEPTIONIST="APPROVED").exists()
+        patient=patients_account_details.objects.filter(patient_id=patient_id).exists()
+        if(patient and appointment):
+            patients_account_details.objects.filter(patient_id=patient_id).update(
                 account_no=account_no,
                 bank_name=bank_name,
                 date_of_debit=timezone.now()
             )
-            patients.objects.filter(id=patient_id).update(PAYMENT_STATUS="YES")
+            patient_appointment_details.objects.filter(patient_appointment_id=patient_id).update(PAYMENT_STATUS="YES")
             return JsonResponse("updated",safe=False)
-        else:
+      
+        if(not patient and appointment):
+         
             patients_account_details.objects.create(
-                account_no=account_no,
-                bank_name=bank_name,
-                patient_id_id=patient_id
-            )
-            patients.objects.filter(id=patient_id).update(PAYMENT_STATUS="YES")
+            account_no=account_no,
+            bank_name=bank_name,
+            patient_id=patient_id
+               )
+            patient_appointment_details.objects.filter(patient_appointment_id=patient_id).update(PAYMENT_STATUS="YES")
             return JsonResponse("created",safe=False)
+
+
+        if(not patient and not appointment):
+            return JsonResponse("wrong",safe=False)
+  
+
 

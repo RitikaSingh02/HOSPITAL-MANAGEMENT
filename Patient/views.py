@@ -30,10 +30,9 @@ def patients_registration(request):
          AADHAR_NO=data['AADHAR_NO']
          STREET_ADDRESS=data['STREET_ADDRESS']
          CITY=data['CITY']
+         COUNTRY=data['COUNTRY']
          STATE=data['STATE']
          POSTAL_CODE=data['POSTAL_CODE']
-         account_no=data['account_no']
-         bank_name=data['bank_name']
          Anemia=data['Anemia']
          Asthma=data['Asthma']
          Bronchitis=data['Bronchitis']
@@ -61,15 +60,12 @@ def patients_registration(request):
          AADHAR_NO=AADHAR_NO,
          STREET_ADDRESS=STREET_ADDRESS ,
          CITY=CITY,
+         COUNTRY=COUNTRY,
          STATE=STATE,
          POSTAL_CODE=POSTAL_CODE
          )
          print(new_patients.id)
-         patient_account_details=patients_account_details.objects.create(
-         account_no=account_no,
-         bank_name=bank_name,
-         patient_id_id=new_patients.id
-         )
+
          patient_medical_history=medical_history.objects.create(
          Anemia=Anemia,
          Asthma=Asthma,
@@ -80,9 +76,9 @@ def patients_registration(request):
          Thyroid=Thyroid,
          Ulcer=Ulcer,
          other=other,
-         medical_id_id=new_patients.id
+         medical_id=new_patients.id
          )
-         return JsonResponse("you have been registered",safe=False)
+         return JsonResponse("true",safe=False)
 
 def patient_login(request):
     if request.method=="POST":
@@ -91,19 +87,64 @@ def patient_login(request):
          PATIENT_FIRST_NAME=data['PATIENT_FIRST_NAME']
          PATIENT_LAST_NAME=data['PATIENT_LAST_NAME']
          PASSWORD=data['PASSWORD']
-         patient=patients.objects.filter(PATIENT_FIRST_NAME=PATIENT_FIRST_NAME,PATIENT_LAST_NAME=PATIENT_LAST_NAME,
+         patient=patients.objects.filter(PATIENT_FIRST_NAME__contains=PATIENT_FIRST_NAME,PATIENT_LAST_NAME__contains=PATIENT_LAST_NAME,
+         PASSWORD__contains=PASSWORD).filter(PATIENT_FIRST_NAME=PATIENT_FIRST_NAME,
+         PATIENT_LAST_NAME=PATIENT_LAST_NAME,
          PASSWORD=PASSWORD).values()
          
          if(patient):
              return JsonResponse(list(patient),safe=False)
          else:
-             return JsonResponse("not registered yet",safe=False)
+             return JsonResponse("wrong",safe=False)
 
 
 
+def view_medical_history(request):
+    if request.method=="POST":
+        data=json.loads(request.body)
+        patient=medical_history.objects.filter(medical_id=data['id']).values()
+
+        return JsonResponse(list(patient),safe=False)
+
+def view_appointment_dates(request):
+    if request.method=="POST":
+        data=json.loads(request.body)
+        date=patient_appointment_details.objects.filter(patient_appointment_id=data['id']
+        ,appointment_date=data['appointment_date']).exclude(prescription="NA").values("appointment_date")
+        return JsonResponse(list(date),safe=False)
+
+def view_prescription(request):
+    if request.method=="POST":
+        data=json.loads(request.body)
+        prescription=patient_appointment_details.objects.filter(patient_appointment_id=data['id'],
+        appointment_date=data['appointment_date']).values("appointment_date",
+        "appointment_time",
+        "doctor_name",
+        "doctor_id",
+        "problem",
+        "prescription",
+        )
+        
+        return JsonResponse(list(prescription),safe=False)
 
 
 
+def patient_notification(request):
+    if request.method=="POST":
+        data=json.loads(request.body)
+        patient_notify=patient_appointment_details.objects.filter(patient_appointment_id=data['id']).values(
+            "appointment_date",
+            "appointment_time",
+            "notification"
+        )
+        return JsonResponse(list(patient_notify),safe=False)
+
+def view_payment_details(request):
+    if request.method=="POST":
+        data=json.loads(request.body)
+        payment=patients_account_details.objects.filter(patient_id=data['id']).values('appointment_id__appointment_date',
+        'appointment_id__appointment_time','date_of_debit','account_no','bank_name')
+        return JsonResponse(list(payment),safe=False)
 
 
 
