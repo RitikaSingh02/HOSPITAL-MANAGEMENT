@@ -8,4 +8,6 @@ urlpatterns=[
 
     url(r'^department_list/$',views.department_list,name="department_list"),
     
+     url(r'^appointment_status/$',views.appointment_status,name="appointment_status"),
+    
 ]

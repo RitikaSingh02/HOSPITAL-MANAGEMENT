@@ -46,6 +46,14 @@ def patient_appointment(request):
             patient_appointment_id=id_patient,
             APPOINTMENT_STATUS_RECEPTIONIST="PENDING"
             )
+           
             return JsonResponse("appointment requested",safe=False)
+
+def appointment_status(request):
+    if request.method=="POST":
+        data=json.loads(request.body)
+        appointment=patient_appointment_details.objects.filter(id=data['id']).values('APPOINTMENT_STATUS_RECEPTIONIST',
+        'PAYMENT_STATUS')
+        return JsonResponse(list(appointment),safe=False)
 
 # Create your views here.

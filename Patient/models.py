@@ -44,7 +44,7 @@ class patient_appointment_details(models.Model):
 class patients_account_details(models.Model):
     patient=models.ForeignKey(patients,null=True,on_delete=models.SET_NULL)
     appointment=models.ForeignKey(patient_appointment_details,null=True,on_delete=models.SET_NULL)
-    account_no=models.BigIntegerField(default=0,unique=True)
+    account_no=models.BigIntegerField(default=0)
     bank_name=models.CharField(max_length=250,default="NULL")
     date_of_debit=models.DateField(auto_now_add=True,auto_now=False)
 
